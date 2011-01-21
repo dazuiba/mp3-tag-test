@@ -1,0 +1,42 @@
+<form method="post" > 
+	<p>
+		<label for="filedata">MP3目录</label>
+		<%= text_field_tag :dir, params[:dir] %> 
+	</p>
+	<p>
+		<label for="filedata">包含子目录</label><%= check_box_tag :rec, '1', params[:rec].nil?||params[:rec]=='1' %> 
+	</p>
+	<p>
+		<label for="filedata">非windows系统</label><%= check_box_tag :encoding, 'utf-8',params[:encoding]=='utf-8' %> 
+	</p>
+	<p>
+		<input type="submit" value="检查" name="commit" class="button">
+		<img style="display: none;" src="http://1q84.fm/images/spinner.gif?1295406029" class="spinner" alt="稍等">
+	</p>
+</form>
+<div style = "color:red;"> <%= @error %></div>
+<p>当前编码：<%= @encoding %></p>
+<% if @infos %>
+<table border="1">
+	<tr>
+		<th>Mp3 File</th>
+		<th>Tag Info</th>
+	</tr>
+	<% @infos.each do|info|  %>
+	<% tag_info = info.last.to_a.sort{|a,b|a.first.to_s<=>b.first.to_s} 
+		 count = tag_info.size 
+		 first_tag = tag_info.shift 
+	%>
+	<tr>
+		<td rowspan=<%= count %>><%= File.basename info.first %></td>
+		<td><%= first_tag.first %> : <%= first_tag.last %></td>
+	</tr>
+	
+ 	<% tag_info.each do|k,v|%>
+		<tr>
+			<td><%= k %>: <%= v%></td>
+		</tr>
+  <% end %>
+	<% end %>
+</table>
+<% end %>
